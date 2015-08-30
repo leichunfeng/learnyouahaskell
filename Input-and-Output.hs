@@ -1,5 +1,9 @@
 import Data.Char
 import Control.Monad
+import System.Random
+import System.IO
+import qualified Data.ByteString.Lazy as B
+import qualified Data.ByteString as S
 
 ----------------
 -- Hello, world!
@@ -21,7 +25,7 @@ import Control.Monad
 --    putStrLn "Hello, what's your name?"
 --    name <- getLine
 --    putStrLn $ "Read this carefully, because this is your future: " ++ tellFortune name
-  
+
 --main = do
 --    putStrLn "What's your first name?"
 --    firstName <- getLine
@@ -121,10 +125,10 @@ import Control.Monad
 -- Files and streams
 --------------------
 
-main = do
-    withFile "something.txt" ReadMode (\handle -> do
-        contents <- hGetContents handle
-        putStr contents)
+--main = do
+--    withFile "something.txt" ReadMode (\handle -> do
+--        contents <- hGetContents handle
+--        putStr contents)
 
 main = do
     withFile "something.txt" ReadMode (\handle -> do
@@ -140,6 +144,23 @@ main = do
 -- Randomness
 -------------
 
+threeCoins :: StdGen -> (Bool, Bool, Bool)
+threeCoins gen =
+    let (firstCoin, newGen) = random gen
+        (secondCoin, newGen') = random newGen
+        (thirdCoin, newGen'') = random newGen'
+    in  (firstCoin, secondCoin, thirdCoin)
+
+randoms' :: (RandomGen g, Random a) => g -> [a]
+randoms' gen = let (value, newGen) = random gen in value:randoms' newGen
+
+--finiteRandoms :: (RandomGen g, Random a, Num n) => n -> g -> ([a], g)
+--finiteRandoms 0 gen = ([], gen)
+--finiteRandoms n gen =
+--    let (value, newGen) = random gen
+--        (restOfList, finalGen) = finiteRandoms (n-1) newGen
+--    in  (value:restOfList, finalGen)
+
 --------------
 -- Bytestrings
 --------------
@@ -147,33 +168,3 @@ main = do
 -------------
 -- Exceptions
 -------------
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
